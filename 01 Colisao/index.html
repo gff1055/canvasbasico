@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Aula</title>
+</head>
+
+<style>
+	canvas{
+		border: solid 1px;
+	}
+</style>
+
+<body>
+	<canvas width="600" height="400">
+
+	</canvas>
+</body>
+
+<script>
+	var LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40;	// Variaveis referentes as teclas direcionais
+	var SIZE = 50;								// Tamanho dos blocos
+	var cnv = document.querySelector("canvas");	// Variavel recebe o elemento canvas
+	var ctx = cnv.getContext("2d");				// Variavel recebe o contexto
+	var posX = 50;								// Posicao X inicial
+	var posY = 50;								// Posicao Y inicial
+	var objColor = "#00f";						// Cor do bloco
+
+	var blockX = cnv.width/2 - SIZE/2;			// bloco fica no meio da tela
+	var blockY = cnv.height/2 - SIZE/2;			// bloco fica no meio da tela
+
+	var mvLeft = mvUp = mvRight = mvDown = false;	// Indica se ouve movimento em alguma direcao
+
+	function keydownHandler(e){					// Funcao que movimenta o bloco
+		var key = e.keyCode;
+
+		switch(key){
+			case UP:
+				mvUp = true;
+				break;
+			
+			case DOWN:
+				mvDown = true;
+				break;
+
+			case LEFT:
+				mvLeft = true;
+				break;
+
+			case RIGHT:
+				mvRight = true;
+				break;
+		}
+	}
+
+	function keyupHandler(e){
+		var key = e.keyCode;
+
+		switch(key){
+			case UP:
+			mvUp = false;
+			break;
+	
+		case DOWN:
+			mvDown = false;
+			break;
+
+		case LEFT:
+			mvLeft = false;
+			break;
+
+		case RIGHT:
+			mvRight = false;
+			break;
+		}
+	}
+
+	window.addEventListener("keydown", keydownHandler, false);
+	window.addEventListener("keyup", keyupHandler, false);
+
+	function updateBlock(){						// Funcao que atualiza a posicao X e Y do bloco
+		if(mvLeft){
+			posX--;
+		}
+
+		if(mvRight){
+			posX++;
+		}
+
+		if(mvUp){
+			posY--;
+		}
+
+		if(mvDown){
+			posY++;
+		}
+	}
+
+	function colide(){							// Metodo para detectar se houve colisao
+		if(posX + SIZE > blockX
+		&& posX < blockX + SIZE
+		&& posY + SIZE > blockY
+		&& posY < blockY + SIZE){
+			objColor = "#f00";
+		}
+		else{
+			objColor = "#00f";
+		}
+	}
+
+	function update(){							// Metodo para atualizar a posicao dos blocos
+		updateBlock();							// Atualiza o bloco estatico
+		colide();								// Verifica se houve colisao
+	}
+
+	function draw(){							// Funcao para desenhar e preencher os blocos
+		ctx.clearRect(0, 0, cnv.width, cnv.height);
+		ctx.fillStyle = "#000";
+		ctx.fillRect(blockX, blockY, SIZE, SIZE);
+		ctx.fillStyle = objColor;
+		ctx.fillRect(posX, posY, SIZE, SIZE);
+	}
+	
+	function loop(){
+		window.requestAnimationFrame(loop, cnv);	// A funcao é executar infinitamente
+		update();								// Funcao para atualizar a posicao dos blocos
+		draw();
+	}
+
+	loop();										// Funcao para executar o script
+</script>
+
+</html>
