@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Canvas</title>
+</head>
+
+<style>
+	canvas{
+		border: solid 1px;
+	}
+</style>
+
+<body>
+	<canvas width="600" height="400">
+
+	</canvas>
+</body>
+
+<script>
+	var UP = 38, DOWN = 40, LEFT = 37, RIGHT = 39;	// Direcoes do bloco
+	var moveEsquerda = moveDireita = moveCima = moveBaixo = false;	// Flag para ajudar nas direcoes do bloco
+	var cnv = document.querySelector("canvas");	// Objeto canvas
+	var ctx = cnv.getContext("2d");				// Contexto de renderização
+
+	var p1 = {									// Bloco
+		x: 10,									// posicao x inicial do bloco
+		y: 10,									// posicao y inicial do bloco
+	};
+
+	function keydownHandler(e){
+		var key = e.keyCode;
+
+		if(key === LEFT && key!==RIGHT)
+			moveEsquerda = true;
+
+		if(key === RIGHT && key !== LEFT)
+			moveDireita = true;
+		
+		if(key === UP && key !== DOWN)
+			moveCima = true;
+
+		if(key === DOWN && key !== UP)
+			moveBaixo = true;
+	}
+
+	function keyupHandler(e){
+		var key = e.keyCode;
+
+		if(key === LEFT && key!==RIGHT)
+			moveEsquerda = false;
+
+		if(key === RIGHT && key !== LEFT)
+			moveDireita = false;
+		
+		if(key === UP && key !== DOWN)
+			moveCima = false;
+
+		if(key === DOWN && key !== UP)
+			moveBaixo = false;
+	}
+
+	window.addEventListener("keydown", keydownHandler);	// Espera evento keydown
+	window.addEventListener("keyup", keyupHandler);	// Espera evento keyup
+
+	function move(){							// Funcao para mover o bloco
+		if(moveEsquerda)
+			p1.x--;
+		
+		if(moveDireita)
+			p1.x++;
+		
+		if(moveCima)
+			p1.y--;
+
+		if(moveBaixo)
+			p1.y++;
+	}
+
+	function render(){
+		ctx.clearRect(0, 0, cnv.width, cnv.height);
+		ctx.fillRect(p1.x, p1.y, 50, 50);
+	}
+
+	function update(){							// Metodo para os elementos do jogo
+		requestAnimationFrame(update, cnv);		// Chama o metodo 'update' indefinidamente
+		move();									// Move o bloco
+		render();								// Renderiza o bloco
+	}
+
+	update();									// Atualiza os elementos do jogo
+
+</script>
+
+</html>
