@@ -1,38 +1,137 @@
 <!DOCTYPE html>
 <html>
 <head>
-		
+	<meta charset="utf-8"/>
 	<title>Mapa</title>
 </head>
-<style>
+<style type="text/css">
 	canvas{
 		border: solid 1px;
 	}
 </style>
-<body>
-	<canvas width="400" height="400">
 
-	</canvas>
+<body>
+	<canvas width="400" height="400"></canvas>
 </body>
 
-<script type="text/javascript">
-	var cnv = document.querySelector("canvas");
-	var ctx = cnv.getContext("2d");
-	var map = new Image();
-	map.src = "img/map.jpg";
-	map.onload = render();
+<script>
+	var LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40, PGUP = 33, PGDOWN = 34;	// Mapeamento das teclas de controles do mapa
+	var mvLeft = mvRight = mvUp = mvDown = zoomIn = zoomOut = false;		// Inicia flags de controle
+	var cnv = document.querySelector("canvas");	// Recebe o elemento canvas
+	var ctx = cnv.getContext("2d");				// contexto de renderizacao 2D
+	var srcX = 0;								// Eixo x da area de visualizacao
+	var srcY = 0;								// Eixo y da area de visualizacao
+	var size = 400;								// Tamanho da area de visualizacao
+	var speed = 2;								// Velocidade de selecao
 
-	function render(){
-		ctx.clearRect(0,0,cnv.width,cnv.height);
-		ctx.drawImage(map,0,0,400,400,0,0,cnv.width,cnv.height);
+	var map = new Image();						// nova imagem
+	
+	map.src = "img/map.jpg";					// carregando nova imagem
+	map.onload = looping;						// Atribui funcao quando imagem é carregada
+
+	
+	
+	function render(){							// Metodo para renderizar a image,
+		ctx.clearRect(0, 0, cnv.width, cnv.height);	// Limpa a area de renderizacao
+		ctx.drawImage(map,srcX,srcY,size,size,0,0,cnv.width,cnv.height);	// Desenha a imagem
 	}
 
-	function update(){
+	function keydownHandler(e){				// Metodo para setar as flags de controle
+		var key = e.keyCode;
 
+		switch(key){
+		
+			case LEFT:
+				mvLeft = true;
+				break;
+		
+			case RIGHT:
+				mvRight = true;
+				break;
+		
+			case UP:
+				mvUp = true;
+				break;
+		
+			case DOWN:
+				mvDown = true;
+				break;
+		
+			case PGDOWN:
+				zoomOut = true;
+				break;
+		
+			case PGUP:
+				zoomIn = true;
+				break;
+		}
 	}
 
-	function looping(){
+	function keyupHandler(e){
+		var key = e.keyCode;
 
+		switch(key){
+		
+			case LEFT:
+				mvLeft = false;
+				break;
+		
+			case RIGHT:
+				mvRight = false;
+				break;
+		
+			case UP:
+				mvUp = false;
+				break;
+		
+			case DOWN:
+				mvDown = false;
+				break;
+		
+			case PGDOWN:
+				zoomOut = false;
+				break;
+		
+			case PGUP:
+				zoomIn = false;
+				break;
+		}
+	}
+
+	window.addEventListener("keydown", keydownHandler, false);	// Evento ao pressionar uma tecla
+	window.addEventListener("keyup", keyupHandler, false);	// Evento ao soltar uma tecla
+
+	function update(){							// Funcao para atualizar o mapa
+		if(mvLeft){
+			if(srcX > 1)
+				srcX-=speed;
+		}
+
+		if(mvRight){
+			srcX+=speed;
+		}
+
+		if(mvUp){
+			srcY-=speed;
+		}
+
+		if(mvDown){
+			srcY+=speed;
+		}
+
+		if(zoomIn){
+			size-=speed;
+		}
+
+		if(zoomOut){
+			size+=speed;
+		}
+	}
+
+	function looping(){							
+		requestAnimationFrame(looping, cnv);	// Executa a funcao loop indefinidamente
+		update();								// Atualiza a imagem a cada frame
+		render();								// Renderiza a imagem
 	}
 </script>
 </html>
