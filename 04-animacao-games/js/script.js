@@ -8,6 +8,9 @@ window.onload = function(){
 
 	var zezim = new Sprite(spriteSheet);
 
+	var scene = new Image();
+	scene.src = "img/scene.png";
+
 	window.addEventListener("keydown", keydownHandler, false);
 
 	window.addEventListener("keyup", keyupHandler, false);
@@ -66,7 +69,9 @@ window.onload = function(){
 	}
 
 	function init(){
+		zezim.posX = zezim.posY = 150;	
 		loop();									// chama loop pela primeira vez
+
 	}
 
 	function update(){
@@ -75,6 +80,7 @@ window.onload = function(){
 
 	function draw(){
 		ctx.clearRect(0,0, cnv.width, cnv.height);
+		ctx.drawImage(scene,0,0,scene.width, scene.height,0,0, cnv.width, cnv.height);
 		zezim.draw(ctx);
 	}
 
