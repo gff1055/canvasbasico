@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Move Camera</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+<canvas width="300" height="300"></canvas>
+<script>
+	(function(){
+		var cnv = document.querySelector('canvas');
+		var ctx = cnv.getContext('2d');
+
+		// recursos do jogo
+		var background = new Image;
+		background.src = "scene.png";
+
+		// rodando infitamente
+		function loop(){
+			window.requestAnimationFrame(loop, cnv);
+			update();
+			render();
+		}
+
+		function update(){
+
+		}
+
+		function render(){
+
+		}
+
+		loop();
+	}())
+</script>
+</body>
+</html>
