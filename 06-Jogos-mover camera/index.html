@@ -17,6 +17,9 @@
 		var background = new Image;
 		background.src = "scene.png";
 
+		var monster = new Image();
+		monster.src = "monster.png";
+
 		//objetos
 		var sprites = [];
 		var gameWorld = {
@@ -27,8 +30,62 @@
 			height: 600
 		};
 
-		sprites.push(gameWorld)
+		sprites.push(gameWorld);
 
+		var char  = {
+			img: monster,
+			x: 0,
+			y: 0,
+			width: 64,
+			height: 64,
+		};
+
+		sprites.push(char);
+
+		//centralizar o char
+		char.x = (gameWorld.width - char.width) / 2;
+		char.y = (gameWorld.height - char.height) / 2;
+
+		// mover o char
+		var mvLeft = mvRight = mvDown = mvUp = false;
+		window.addEventListener('keydown', function(e){
+			var key = e.keyCode;
+
+			switch(key){
+				case 37:
+					mvLeft = true;
+					break;
+				case 39:
+					mvRight = true;
+					break;
+				case 38:
+					mvUp = true;
+					break;
+				case 40:
+					mvDown = true;
+					break;
+			}
+		}, false);
+
+		window.addEventListener('keyup', function(e){
+			var key = e.keyCode;
+
+			switch(key){
+				case 37:
+					mvLeft = false;
+					break;
+				case 39:
+					mvRight = false;
+					break;
+				case 38:
+					mvUp = false;
+					break;
+				case 40:
+					mvDown = false;
+					break;
+			}
+		}, false);
+		
 		var cam = {
 			x: 0,
 			y: 0,
@@ -53,8 +110,8 @@
 		};
 
 		// centralizar a camera
-		cam.x = (gameWorld.width - cam.width) / 2
-		cam.y = (gameWorld.height - cam.height) / 2
+		cam.x = (gameWorld.width - cam.width) / 2;
+		cam.y = (gameWorld.height - cam.height) / 2;
 
 		// rodando infitamente
 		function loop(){
@@ -64,7 +121,18 @@
 		}
 
 		function update(){
-
+			if(mvLeft && !mvRight){
+				char.x -= 2;
+			}
+			if(mvRight && !mvLeft){
+				char.x += 2;
+			}
+			if(mvUp && !mvDown){
+				char.y -= 2;
+			}
+			if(mvDown && !mvUp){
+				char.y += 2;
+			}
 		}
 
 		function render(){
