@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<title>Ponteiro</title>
+</head>
+<body>
+	<div style = "width: 300px; height: 600px; border: solid;">
+		<canvas width="300" height="600">
+
+		</canvas>
+	</div>
+	<script>
+		// variavel associada ao elemento canvas
+		var cnv = document.querySelector('canvas');
+
+		// variavel para armazenamento do contexto de renderizacao do canvas
+		var ctx = cnv.getContext('2d');
+
+		// Variavel para a gravidade
+		var gravity = 0.1;
+
+		// objeto que representa a bolinha
+		var ball = {
+			radius: 20,	// raio do circulo
+			vx: 0, 		// vetor de deslocamento em x
+			vy: 0,		// vetor de deslocamento rm y
+			x: 50,
+			y: 50,
+			color: "#00f",
+			held: false	// flag que indica se a bola esta solta ou segurada pelo mouse
+		};
+
+		// funcao que sera executada enuanto programa estiver rodando
+		function loop(){
+			window.requestAnimationFrame(loop, cnv);
+			update();
+			render();
+		}
+
+		// funcao para fazer a atualizacao do programa
+		function update(){
+			// A bolinha nao esta sendo segurada pelo usuario
+			if(!ball.held){
+				ball.vy += gravity;
+				ball.y += ball.vy;
+				ball.x += ball.vx;
+			}
+
+			// A bolinha esta sendo segurada pelo usuario
+			else{
+				ball.vy = 0;
+				ball.vx = 0;
+			}
+
+			// Fazer a bolinha quicar no chao
+			if(ball.y + ball.radius > cnv.height){
+				ball.y = cnv.height - ball.radius;
+				ball.vy *= -0.99;
+			}
+
+			// Fazer a bola quicar nas paredes
+			if(){}
+		}
+
+		// Funcao que sera usada na renderizacao
+		function render(){
+			ctx.clearRect(0, 0, cnv.width, cnv.height);
+			ctx.fillStyle = ball.color;
+
+			// Desenhando e preenchendo o circulo
+			ctx.beginPath();
+			ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+			ctx.closePath();
+			ctx.fill();
+		}
+
+		loop();
+	</script>
+</body>
+</html>
