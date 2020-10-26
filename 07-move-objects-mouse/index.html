@@ -25,7 +25,7 @@
 		// objeto que representa a bolinha
 		var ball = {
 			radius: 20,	// raio do circulo
-			vx: 0, 		// vetor de deslocamento em x
+			vx: Math.floor(Math.random()*10) + 1, 		// vetor de deslocamento em x
 			vy: 0,		// vetor de deslocamento rm y
 			x: 50,
 			y: 50,
@@ -58,11 +58,26 @@
 			// Fazer a bolinha quicar no chao
 			if(ball.y + ball.radius > cnv.height){
 				ball.y = cnv.height - ball.radius;
-				ball.vy *= -0.99;
+				ball.vy *= -0.8;
 			}
 
-			// Fazer a bola quicar nas paredes
-			if(){}
+			//** Fazer a bola quicar nas paredes
+
+			// Se a bola chegar a extremidade esquerda ou direita
+			if(ball.x - ball.radius < 0 || ball.x + ball.radius > cnv.width){
+				
+				// A bola atingiu a extremidade esquerda seu valor x é travado
+				if(ball.x - ball.radius <0){
+					ball.x = ball.radius;
+				}
+				
+				// A bola atingiu a extremidade direita seu valor x é travado
+				else{
+					ball.x = cnv.width - ball.radius;
+				}
+
+				ball.vx = ball.vx * -0.8;
+			}
 		}
 
 		// Funcao que sera usada na renderizacao
