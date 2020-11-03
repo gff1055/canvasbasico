@@ -19,6 +19,9 @@
 		// variavel para armazenamento do contexto de renderizacao do canvas
 		var ctx = cnv.getContext('2d');
 
+		// variaveis que armazenam os valores dos catetos
+		var catX = catY = hyp = 0;
+
 		// Variavel para a gravidade
 		var gravity = 0.1;
 
@@ -32,6 +35,24 @@
 			color: "#00f",
 			held: false	// flag que indica se a bola esta solta ou segurada pelo mouse
 		};
+
+		// Evento ao pressionar botao o mouse
+		cnv.addEventListener('mousedown', function(e){
+			catX = ball.x - e.offsetX;
+			catY = ball.y - e.offsetY;
+			hyp = Math.sqrt(catX * catX + catY * catY);
+
+			// Verficando se o clique foi dentro da area da bola
+			if(hyp < ball.radius){
+				ball.held = ball.held ? false : true;
+			}
+		}, false);
+
+		// Evento ao liberar o botao do mouse
+		cnv.addEventListener('mouseup', function(e){}, false);
+
+		// Evento ao mover o mouse
+		cnv.addEventListener('mousemove', function(e){}, false);
 
 		// funcao que sera executada enuanto programa estiver rodando
 		function loop(){
