@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div style = "width: 300px; height: 600px; border: solid;">
-		<canvas width="300" height="600">
+		<canvas width="300" height="600" style="cursor: -webkit-grab">
 
 		</canvas>
 	</div>
@@ -38,21 +38,39 @@
 
 		// Evento ao pressionar botao o mouse
 		cnv.addEventListener('mousedown', function(e){
+			var cssValue = "cursor: -webkit-grabbing;";
+			cnv.style.cssText = cssValue;
 			catX = ball.x - e.offsetX;
 			catY = ball.y - e.offsetY;
 			hyp = Math.sqrt(catX * catX + catY * catY);
 
 			// Verficando se o clique foi dentro da area da bola
-			if(hyp < ball.radius){
-				ball.held = ball.held ? false : true;
+			if(hyp < ball.radius && !ball.held){
+				ball.held = true;
+				//ball.held = ball.held ? false : true;
 			}
 		}, false);
 
 		// Evento ao liberar o botao do mouse
-		cnv.addEventListener('mouseup', function(e){}, false);
+		cnv.addEventListener('mouseup', function(e){
+			var cssValue = "cursor: -webkit-grab;";
+			cnv.style.cssText = cssValue;
+			if(ball.held){
+				ball.held = false;
+				ball.vx = Math.floor(Math.random()*10)+1;
+			}
+		}, false);
 
 		// Evento ao mover o mouse
-		cnv.addEventListener('mousemove', function(e){}, false);
+		cnv.addEventListener('mousemove', function(e){
+
+			// A bola esta sendo segurada?
+			if(ball.held){
+				ball.x = e.offsetX;
+				ball.y = e.offsetY;
+			}
+
+		}, false);
 
 		// funcao que sera executada enuanto programa estiver rodando
 		function loop(){
