@@ -15,3 +15,8 @@ div{
 	position: relative;
 	margin: 10px auto;
 }
+
+canvas{
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
+}
