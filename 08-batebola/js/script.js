@@ -23,6 +23,18 @@
 		color: "#f00",							// Cor da fonte
 		visible: true							// A mensagem estara visivel
 	};
+	
+	messages.push(startMessage);
+
+
+	//Eventos
+
+	cnv.addEventListener('mousedown', function(e){
+
+	}, false);
+
+
+	//Funcoes
 
 	function loop(){
 		requestAnimationFrame(loop, cnv);
@@ -38,7 +50,21 @@
 	function update(){}
 
 	// Funcao responsavel por exibir na tela os elementos renderizados
-	function render(){}
+	function render(){
+		ctx.clearRect(0, 0, cnv.width, cnv.height);
+
+		// renderizacao das mensagens de texto
+		for(var i in messages){
+			var msg = messages[i];
+
+			// Se o elemento for visivel...
+			if(msg.visible){
+				ctx.font = msg.font;
+				ctx.fillStyle = msg.color;
+				ctx.fillText(msg.text, (cnv.width - ctx.measureText(msg.text).width) / 2, msg.y);
+			}
+		}
+	}
 
 	// Chamando funcao para iniciar o jogo
 	loop();
