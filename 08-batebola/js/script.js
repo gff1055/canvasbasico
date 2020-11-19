@@ -1,4 +1,5 @@
 (function(){
+
 	// variavel que recebe a referencia ao elemento canvas
 	var cnv = document.querySelector('canvas');
 	// variavel que recebe o contexto bidirecional de renderizacaodo canvas
@@ -6,40 +7,63 @@
 	
 	//ESTADOS DO JOGO
 	var 
-	START = 1,									// O jogo esta pronto para ser iniciado
-	PLAY = 2,									// O jogador esta jogando
-	OVER = 3;									// O jogo acabou
+	START = 1,	// O jogo esta pronto para ser iniciado
+	PLAY = 2,	// O jogador esta jogando
+	OVER = 3;	// O jogo acabou
 
 	var gameState = START;
+
+	// Objeto bola
+	var ball = {
+		radius: 20,				// Raio da bola
+		vx: 0,					// Vetor de deslocamento em X
+		vy: 0,					// Vetor de deslocamento em Y
+		x: cnv.width/2 - 10,	// Posicao X inicial
+		y: 50,					// Posicao Y inicial
+		color: "#00f",			// Vor da bola
+		touched: false,			// Flag que indica se a bola foi clicada
+		visible: false			// Flag que indica se a bolinha deve ser exibida.
+	}
 
 	// mensagens
 	var messages = [];
 
 	// Mensagem inicial que sera exibida ao iniciar o jogo
 	var startMessage = {
-		text: "TOUCH TO START",					// Mensagem a ser exibida
-		y: cnv.height/2 - 100,					// Posicao da mensagem
-		font: "bold 30px Sans-Serif",			// Comfiguracoes da fonte
-		color: "#f00",							// Cor da fonte
-		visible: true							// A mensagem estara visivel
+		text: "TOUCH TO START",			// Mensagem a ser exibida
+		y: cnv.height/2 - 100,			// Posicao da mensagem
+		font: "bold 30px Sans-Serif",	// Comfiguracoes da fonte
+		color: "#f00",					// Cor da fonte
+		visible: true					// A mensagem estara visivel
 	};
 	
 	messages.push(startMessage);
 
 
 	//Eventos
-
 	cnv.addEventListener('mousedown', function(e){
+
+		// Selecionando o estado do jogo
+		switch(gameState){
+
+			/*O jogo esta no estado START.
+			Aqui a mensagem inicial desaparece e o jogo muda para o estado PLAY*/
+			case START:
+				gameState = PLAY;
+				startMessage.visible = false;
+				startGame();
+				break;
+
+		}
 
 	}, false);
 
 
 	//Funcoes
-
 	function loop(){
 		requestAnimationFrame(loop, cnv);
 
-		// O jogo sera atualizado apenas quando o jogador estiver jogando
+		// O jogo sera atualizado apenas quando o jogador estiver jogando(PLAY)
 		if(gameState == PLAY){
 			update();
 		}
@@ -53,6 +77,15 @@
 	function render(){
 		ctx.clearRect(0, 0, cnv.width, cnv.height);
 
+		// renderizacao da bola
+		if(ball.visible){
+			ctx.fillStyle = ball.color;
+			ctx.beginPath();
+			ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+			ctx.closePath();
+			ctx.fill();
+		}
+
 		// renderizacao das mensagens de texto
 		for(var i in messages){
 			var msg = messages[i];
@@ -64,6 +97,11 @@
 				ctx.fillText(msg.text, (cnv.width - ctx.measureText(msg.text).width) / 2, msg.y);
 			}
 		}
+	}
+
+	// funcao de inicializacao do jogo
+	function startGame(){
+		ball.visible = true;
 	}
 
 	// Chamando funcao para iniciar o jogo
