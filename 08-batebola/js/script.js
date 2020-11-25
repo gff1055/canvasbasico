@@ -2,8 +2,12 @@
 
 	// variavel que recebe a referencia ao elemento canvas
 	var cnv = document.querySelector('canvas');
+	
 	// variavel que recebe o contexto bidirecional de renderizacaodo canvas
 	var ctx = cnv.getContext('2d');
+	
+	// variavel responsavel pela gravidade no jogo
+	var gravity = 0.1;
 	
 	//ESTADOS DO JOGO
 	var 
@@ -67,11 +71,25 @@
 		if(gameState == PLAY){
 			update();
 		}
+
 		render();
 	}
 
 	// Funcao onde é desenvoldida a logica do jogo
-	function update(){}
+	function update(){
+		// acao da gravidade e deslocamento da bolinha
+		ball.vy += gravity;
+		ball.y += ball.vy;
+
+		// game over - (Se abola atingir o fim do canvas)
+		if(ball.y - ball.radius > cnv.height){
+			gamestate = OVER;
+			ball.visible = false;
+			window.setTimeout(function(){
+
+			}),2000)
+		}
+	}
 
 	// Funcao responsavel por exibir na tela os elementos renderizados
 	function render(){
