@@ -8,6 +8,7 @@
 	
 	// variavel responsavel pela gravidade no jogo
 	var gravity = 0.1;
+	var catX = catY = hyp = 0;
 	
 	//ESTADOS DO JOGO
 	var 
@@ -46,6 +47,9 @@
 
 	//Eventos
 	cnv.addEventListener('mousedown', function(e){
+		catX = ball.x - e.offsetX;
+		catY = ball.y - e.offsetY;
+		hyp = Math.sqrt(catX * catX + catY * catY)
 
 		// Selecionando o estado do jogo
 		switch(gameState){
@@ -58,9 +62,28 @@
 				startGame();
 				break;
 
+			case PLAY:
+				if(hyp < ball.radius && !ball.touched){
+					ball.vx = Math.floor(Math.random() * 21) - 10;
+					ball.vy = -(Math.floor(Math.random() * 6) + 5);
+					ball.touched = true;
+
+				}
+
+				break;
+
+			
+
 		}
 
 	}, false);
+
+
+	cnv.addEventListener('mouseup', function(){
+		if(gameState === PLAY){
+			ball.touched = false;
+		}
+	});
 
 
 	//Funcoes
@@ -80,14 +103,28 @@
 		// acao da gravidade e deslocamento da bolinha
 		ball.vy += gravity;
 		ball.y += ball.vy;
+		ball.x += ball.vx;
+
+		// Quicar nas paredes
+		if(ball.x + ball.radius > cnv.width || ball.x < ball.radius){
+			if(ball.x < ball.radius){
+				ball.x = ball.radius;
+			}else{
+				ball.x = cnv.width - ball.radius;
+			}
+
+			ball.vx *= -0.8;
+		}
 
 		// game over - (Se abola atingir o fim do canvas)
 		if(ball.y - ball.radius > cnv.height){
 			gamestate = OVER;
 			ball.visible = false;
-			window.setTimeout(function(){
 
-			}),2000)
+			window.setTimeout(function(){
+				startMessage.visible = true;
+				gameState = START;
+			},2000);
 		}
 	}
 
@@ -119,7 +156,12 @@
 
 	// funcao de inicializacao do jogo
 	function startGame(){
+		ball.vy = 0;
+		ball.y = 50;
+		ball.vx = Math.floor(Math.random() * 21) - 10;
+		ball.x = Math.floor(Math.random() * 261) + 10;
 		ball.visible = true;
+
 	}
 
 	// Chamando funcao para iniciar o jogo
