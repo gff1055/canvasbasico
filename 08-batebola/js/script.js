@@ -18,6 +18,9 @@
 
 	var gameState = START;
 
+	// pontuacao
+	var score = 0;
+
 	// Objeto bola
 	var ball = {
 		radius: 20,				// Raio da bola
@@ -49,7 +52,7 @@
 	cnv.addEventListener('mousedown', function(e){
 		catX = ball.x - e.offsetX;
 		catY = ball.y - e.offsetY;
-		hyp = Math.sqrt(catX * catX + catY * catY)
+		hyp = Math.sqrt(catX * catX + catY * catY)-ball.radius*2;
 
 		// Selecionando o estado do jogo
 		switch(gameState){
@@ -67,12 +70,10 @@
 					ball.vx = Math.floor(Math.random() * 21) - 10;
 					ball.vy = -(Math.floor(Math.random() * 6) + 5);
 					ball.touched = true;
-
+					score++;
 				}
 
 				break;
-
-			
 
 		}
 
@@ -107,6 +108,7 @@
 
 		// Quicar nas paredes
 		if(ball.x + ball.radius > cnv.width || ball.x < ball.radius){
+			
 			if(ball.x < ball.radius){
 				ball.x = ball.radius;
 			}else{
@@ -114,6 +116,12 @@
 			}
 
 			ball.vx *= -0.8;
+		}
+
+		// Quicar no teto
+		if(ball.y < ball.radius && ball.vy < 0){
+			ball.y = ball.radius;
+			ball.vy *= -1;
 		}
 
 		// game over - (Se abola atingir o fim do canvas)
@@ -139,6 +147,11 @@
 			ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
 			ctx.closePath();
 			ctx.fill();
+
+			// desenhar o placar
+			ctx.font = "bold 15px Arial";
+			ctx.fillStyle = "#000";
+			ctx.fillText("SCORE: " + score, 10, 20);
 		}
 
 		// renderizacao das mensagens de texto
