@@ -47,6 +47,12 @@
 	
 	messages.push(startMessage);
 
+	// Placar final
+	var scoreText = Object.create(startMessage);
+	scoreText.visible = false;
+	scoreText.y = (cnv.height/2 + 50);
+	messages.push(scoreText);
+
 
 	//Eventos
 	cnv.addEventListener('mousedown', function(e){
@@ -66,6 +72,7 @@
 				break;
 
 			case PLAY:
+
 				if(hyp < ball.radius && !ball.touched){
 					ball.vx = Math.floor(Math.random() * 21) - 10;
 					ball.vy = -(Math.floor(Math.random() * 6) + 5);
@@ -75,15 +82,17 @@
 
 				break;
 
-		}
+			}
 
 	}, false);
 
 
 	cnv.addEventListener('mouseup', function(){
+
 		if(gameState === PLAY){
 			ball.touched = false;
 		}
+
 	});
 
 
@@ -111,7 +120,9 @@
 			
 			if(ball.x < ball.radius){
 				ball.x = ball.radius;
-			}else{
+			}
+			
+			else{
 				ball.x = cnv.width - ball.radius;
 			}
 
@@ -133,6 +144,9 @@
 				startMessage.visible = true;
 				gameState = START;
 			},2000);
+
+			scoreText.text = "YOUR SCORE: " + score;
+			scoreText.visible = true;
 		}
 	}
 
@@ -147,7 +161,6 @@
 			ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
 			ctx.closePath();
 			ctx.fill();
-
 			// desenhar o placar
 			ctx.font = "bold 15px Arial";
 			ctx.fillStyle = "#000";
@@ -164,7 +177,9 @@
 				ctx.fillStyle = msg.color;
 				ctx.fillText(msg.text, (cnv.width - ctx.measureText(msg.text).width) / 2, msg.y);
 			}
+
 		}
+
 	}
 
 	// funcao de inicializacao do jogo
@@ -174,7 +189,8 @@
 		ball.vx = Math.floor(Math.random() * 21) - 10;
 		ball.x = Math.floor(Math.random() * 261) + 10;
 		ball.visible = true;
-
+		score = 0;
+		scoreText.visible = false;
 	}
 
 	// Chamando funcao para iniciar o jogo
