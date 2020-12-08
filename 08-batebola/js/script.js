@@ -21,6 +21,13 @@
 	// pontuacao
 	var score = 0;
 
+	// recorde
+	var record = 0;
+	
+	if(localStorage.getItem("record") != null){
+		record = localStorage.getItem("record");
+	}
+
 	// Objeto bola
 	var ball = {
 		radius: 20,				// Raio da bola
@@ -51,8 +58,14 @@
 	var scoreText = Object.create(startMessage);
 	scoreText.visible = false;
 	scoreText.y = (cnv.height/2 + 50);
+
 	messages.push(scoreText);
 
+	// recorde
+	var recordMessage = Object.create(startMessage);
+	recordMessage.visible = false;
+	recordMessage.y = (cnv.height / 2 + 100);
+	messages.push(recordMessage);
 
 	//Eventos
 	cnv.addEventListener('mousedown', function(e){
@@ -147,6 +160,14 @@
 
 			scoreText.text = "YOUR SCORE: " + score;
 			scoreText.visible = true;
+
+			if(score > record){
+				record = score;
+				localStorage.setItem("record", record);
+			}
+			
+			recordMessage.text = "BEST SCORE: " + record;
+			recordMessage.visible = true;
 		}
 	}
 
@@ -161,6 +182,7 @@
 			ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
 			ctx.closePath();
 			ctx.fill();
+			
 			// desenhar o placar
 			ctx.font = "bold 15px Arial";
 			ctx.fillStyle = "#000";
@@ -189,8 +211,11 @@
 		ball.vx = Math.floor(Math.random() * 21) - 10;
 		ball.x = Math.floor(Math.random() * 261) + 10;
 		ball.visible = true;
+		
 		score = 0;
 		scoreText.visible = false;
+
+		recordMessage.visible = false;
 	}
 
 	// Chamando funcao para iniciar o jogo
