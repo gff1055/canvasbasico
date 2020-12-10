@@ -58,7 +58,6 @@
 	var scoreText = Object.create(startMessage);
 	scoreText.visible = false;
 	scoreText.y = (cnv.height/2 + 50);
-
 	messages.push(scoreText);
 
 	// recorde
