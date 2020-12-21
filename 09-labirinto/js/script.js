@@ -78,7 +78,20 @@
 		var sumWidth = (objA.width + objB.width) / 2;
 		var sumHeight = (objA.height + objB.height) / 2;
 
-		
+		// verificacao de colisao
+		if(Math.abs(distX) < sumWidth && Math.abs(distY) < sumHeight){
+			
+			var overlapX = sumWidth - Math.abs(distX);
+			var overlapY = sumHeight - Math.abs(distY);
+
+			if(overlapX > overlapY){
+				objA.y = distY > 0 ? objA.y + overlapY : objA.y - overlapY;
+			}
+			else{
+				objA.x = distX > 0 ? objA.x + overlapX : objA.x - overlapX;
+			}
+
+		}
 
 	}
 
