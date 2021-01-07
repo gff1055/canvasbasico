@@ -7,10 +7,15 @@
 
 	var WIDTH = cnv.width, HEIGHT = cnv.height;
 
-	var LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40;
+	var
+		LEFT = 37,
+		UP = 38,
+		RIGHT =	39,
+		DOWN = 40;
+		
 	var mvLeft = mvUp = mvRight = mvDown = false;
 
-	var tileSize = 32;
+	var tileSize = 64;
 
 	var walls = [];
 
@@ -65,6 +70,10 @@
 		}
 
 	}
+
+	var	T_WIDTH = maze[0].length * tileSize, T_HEIGHT = maze.length * tileSize;
+
+
 
 	var cam = {
 		x: 0,
@@ -212,15 +221,16 @@
 		if(player.y < cam.innerTopBoundary()){
 			cam.y = player.y - (cam.height * 0.25);
 		}
-		if(player.x + player.width < cam.innerRightBoundary()){
-			cam.x = player.x + player.width - (cam.width * 0.25);
+		if(player.x + player.width > cam.innerRightBoundary()){
+			cam.x = player.x + player.width - (cam.width * 0.75);
 		}
-		if(player.y + player.height < cam.innerBottomBoundary()){
+		if(player.y + player.height > cam.innerBottomBoundary()){
 			cam.y = player.y + player.height - (cam.height * 0.75);
 		}
 
-
-
+		// Ajusta o labirinto
+		cam.x = Math.max(0, Math.min(T_WIDTH - cam.width, cam.x));	//0 = menor valor possivel
+		cam.y = Math.max(0, Math.min(T_HEIGHT - cam.height, cam.y));	//0 = menor valor possivel
 
 	}
 
@@ -231,6 +241,7 @@
 
 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
 		ctx.save();
+		ctx.translate(-cam.x, -cam.y);
 
 		for(var row in maze){
 			
