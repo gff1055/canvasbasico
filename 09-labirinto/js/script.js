@@ -15,16 +15,30 @@
 		
 	var mvLeft = mvUp = mvRight = mvDown = false;
 
-	var tileSize = 64;
+	var tileSize = 64;		// armazena as dimensoes de desenho do tile
+	var tileSrcSize = 96;	// armazena as dimensoes de captura (tamanho do tile no arquivo de imagem)
+
+
+	var img = new Image();	// Nova instancia de objeto do tipo imagem
+	img.src = "img/img.png";
+
+	// Evento quando a imagem for carregada. A instrucao de inicio de jogo será disparada
+	img.addEventListener("load", function(){
+		requestAnimationFrame(loop, cnv);
+	},false);
+
 
 	var walls = [];
 
 	var player = {
 		x: tileSize + 2,
 		y: tileSize + 2,
-		width: 28,
-		height: 28,
-		speed: 2
+		width: 24,
+		height: 32,
+		speed: 2,
+		srcX: 0,				// Origem em x
+		scrY: tileSrcSize,		// Origem em Y
+		countAnim: 0,			// Contador: mudar o sprite da animação
 	};
 
 	var maze = [
@@ -196,16 +210,36 @@
 
 		if(mvLeft && !mvRight){
 			player.x = player.x - player.speed;
+			player.scrY = tileSrcSize + player.height * 2;
 		}
 		else if(mvRight && !mvLeft){
 			player.x = player.x + player.speed;
+			player.scrY = tileSrcSize + player.height * 3;			
 		}
 
 		if(mvUp && !mvDown){
 			player.y = player.y - player.speed;
+			player.scrY = tileSrcSize + player.height * 1;
 		}
 		else if(mvDown && !mvUp){
 			player.y = player.y + player.speed;
+			player.scrY = tileSrcSize + player.height * 0;
+		}
+
+		// Houve algum comando de movimento do boneco?
+		if(mvLeft || mvRight || mvUp || mvDown){
+			player.countAnim++;
+
+			if(player.countAnim >=8){
+				player.countAnim = 0;
+			}
+
+			player.srcX = Math.floor(player.countAnim/1) * player.width;
+		}
+		// O boneco nao esta se movendo
+		else{
+			player.srcX = 0;
+			player.countAnim = 0;
 		}
 
 		for(var i in walls){
@@ -243,27 +277,38 @@
 		ctx.save();
 		ctx.translate(-cam.x, -cam.y);
 
+		// Percorre as linhas e colunas do labirinto
 		for(var row in maze){
-			
 			for(var column in maze[row]){
 		
 				var tile = maze[row][column];
 
-				if(tile === 1){
 					
-					var x = column * tileSize;
-					var y = row * tileSize;
-					ctx.fillRect(x, y, tileSize, tileSize);
-					
-				}
+				var x = column * tileSize;
+				var y = row * tileSize;
+
+				// Desenha uma imagem
+				ctx.drawImage(
+					img,						// imagem a ser exibida
+					tile * tileSrcSize, 0,		// dados de captura da imagem: cordenadas x e y
+					tileSrcSize, tileSrcSize,	// dados de captura da imagem: dimensao do pedaco da imagem	
+
+					// informacoes sobre a renderizacao na tela
+					x,y,						// coordenada de renderizacao
+					tileSize,tileSize			// dimensao do desenho na tela
+				);
 
 			}
-
 		}
 		
-		ctx.fillStyle = "#00f";
-		ctx.fillRect(player.x, player.y, player.width, player.height);
+		ctx.drawImage(
+			img,
+			player.srcX, player.scrY,
+			player.width, player.height,
 
+			player.x, player.y,
+			player.width, player.height,
+		)
 		ctx.restore();
 
 	}
@@ -279,5 +324,5 @@
 
 
 
-	requestAnimationFrame(loop, cnv);
+	
 }());
