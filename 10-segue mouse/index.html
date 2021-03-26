@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<canvas width="800" height="600" style="border: 1px solid;">
+		<script>
+			var cnv = document.querySelector('canvas');	// armazena referencia para o canvas
+			var ctx = cnv.getContext("2d");				// armazena o contexto de renderizacao
+
+			var img = new Image();	// Variavel para armazenar a imagem.
+			img.src = "aviao.png";
+
+			/*
+				NOME:		Anonima
+				FUNCAO:		Iniciar a execucao do loop do jogo
+			*/
+			img.addEventListener('load', function(){
+				loop();
+			}, false);
+
+
+
+			var obj = {
+				x: 100,			// coordenada em x
+				y: 100,			// coordenada em y
+				width: 80,		// largura
+				height: 64,		// altura
+				rotation: 0,	// angulo de rotacao
+				img: img,		// imagem
+
+				/*
+				NOME:		Anonima
+				RETORNO:	Retorna a posicao do centro do objeto no eixo x
+				*/
+				centerX: function(){
+					return this.x + this.width/2;
+				},
+
+
+				/*
+				NOME:		Anonima
+				RETORNO:	Retorna a posicao do centro do objeto no eixo y
+				*/
+				centerY: function(){
+					return this.y + this.height/2;
+				},
+			}
+
+
+
+			/*
+				NOME:		loop
+				FUNCAO:		responsavel por chamar as animacoes, atualizacao e renderizacao
+				RETORNO:	Retorna a posicao do centro do objeto no eixo y
+			*/
+			function loop(){
+				requestAnimationFrame(loop, cnv);
+				update();
+				render();
+			}
+
+
+
+			/*
+				NOME: update
+				FUNCAO: onde sera feitas as atualizacoes (interacoes do usuario com o aplicativo)
+				RETORNO:	
+			*/
+			function update(){
+
+			}
+
+
+
+
+			/*
+				NOME:		render
+				FUNCAO:		responsavel por desenhar o aviao
+				RETORNO:	
+			*/
+			function render(){
+				ctx.clearRect(0,0, cnv.width, cnv.height);
+				ctx.save();
+				ctx.translate(obj.centerX(), obj.centerY());
+				ctx.rotate(obj.rotation);
+				ctx.drawImage(
+					obj.img,
+					0,0,obj.width, obj.height,
+					-obj.width/2, -obj.height/2, obj.width, obj.height
+					);
+				ctx.restore();
+			}
+		</script>
+	</canvas>
+</body>
+</html>
