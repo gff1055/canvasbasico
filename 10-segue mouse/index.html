@@ -52,6 +52,17 @@
 			}
 
 
+			var mouse = {
+
+			};
+
+			/* Capturando as coordenadas do mouse (x e y) */
+			cnv.addEventListener('mousemove', function(e){
+				mouse.x = e.clientX - cnv.offsetLeft;
+				mouse.y = e.clientY - cnv.offsetTop;
+			}, false);
+
+
 
 			/*
 				NOME:		loop
@@ -72,6 +83,22 @@
 				RETORNO:	
 			*/
 			function update(){
+
+				// Armazenando a Diferenca entre a posicao do ponteiro do mouse e a posicao do objeto
+				var dx = mouse.x - obj.centerX(); 	// Armazena a diferenca no eixo x
+				var dy = mouse.y - obj.centerY(); 	// Armazena a diferenca no eixo y
+
+				// Calculando o angulo para rotacionar o aviao
+				obj.rotation = Math.atan2(dy, dx);		// Calcula o angulo de inclinacao em radianos 
+
+				// Obtendo a distancia do ponteiro do mouse em relacao ao centro do objeto
+				var distance = Math.sqrt(dx*dx + dy*dy);
+
+				// Se a distancia for maior que 1 pixel é necessario ajustar a posicao da imagem(aviao) para ela ir atras do mouse
+				if(distance >= 1){
+					obj.x += dx * .05;
+					obj.y += dy * .05;
+				}
 
 			}
 
